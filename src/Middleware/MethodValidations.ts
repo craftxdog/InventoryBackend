@@ -16,7 +16,7 @@ export async function MethodValidationExist(req: Request, res: Response, next: N
     const method: IMethods | null = await Method.findById(methodId)
 
     if (!method) {
-      const error = new Error('Method not found')
+      const error = new Error('Main Method not found')
       return res.status(404).json({ error: error.message })
     }
 

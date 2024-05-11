@@ -2,6 +2,7 @@ import type { Request, Response } from 'express'
 import colors from 'colors'
 import Method from '../Models/Methods';
 import MethodCMC, { IMethodCMC } from '../Models/MethodCMC';
+import Project from '../Models/Projects';
 
 
 export class MethodCMCController {
@@ -31,14 +32,31 @@ export class MethodCMCController {
       methodCmC.numeroFallas = roundedNumeroFallas
       methodCmC.costoTotal = roundedCostoTotal
       
-      const method = new Method()
+      let method = await Method.findOne({ project: req.project.id, methodType: 'CMC' })
+      if (!method) {
+        method = new Method();
+        method.methodType = 'CMC';
+        method.project = req.project.id;
+      }
+      method.methodCMC.push(methodCmC.id);
+      methodCmC.method = method._id;
 
-      method.methodType = methodCmC.methodType
-      method.methodCMC.push(methodCmC.id)
-      method.project = req.project.id
-      req.project.methods.push(method.id)
+      await Promise.allSettled([methodCmC.save(), method.save()])
 
-      await Promise.allSettled([methodCmC.save(), method.save(), req.project.save()])
+      const project = await Project.findById(req.project.id);
+      if (project && !project.methods.includes(method.id)) {
+        project.methods.push(method.id);
+        await project.save();
+      }
+
+      // const method = new Method()
+
+      // method.methodType = methodCmC.methodType
+      // method.methodCMC.push(methodCmC.id)
+      // method.project = req.project.id
+      // req.project.methods.push(method.id)
+
+      // await Promise.allSettled([, method.save(), req.project.save()])
       res.status(201).send("Método Cáculado")
     } catch (error) {
       console.error(colors.dim.bold(`Error al Cácular, ${error}`))

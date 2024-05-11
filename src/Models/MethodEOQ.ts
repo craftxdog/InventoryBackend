@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, Types } from "mongoose"
+import mongoose, { Schema, Document } from "mongoose"
 
 const methodType = {
   NTC: "",
@@ -19,7 +19,7 @@ export interface IMethodEOQ extends Document {
   costoMantenimiento: number,
   demandaAnual: number
   result: number
-  method: Types.ObjectId
+  method: Schema.Types.ObjectId
 }
 
 const methodSchema: Schema = new Schema ({
@@ -58,7 +58,7 @@ const methodSchema: Schema = new Schema ({
     required: true
   },
   method: {
-    type: Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'Method'
   }
 }, { timestamps: true } )

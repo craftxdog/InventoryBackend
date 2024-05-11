@@ -6,6 +6,7 @@ import { handleInputErrors } from "../Middleware/Validations";
 import { MethodBelongToProject, MethodValidationExist } from "../Middleware/MethodValidations";
 import { EOQMethodBelongToMethods, MethodEOQValidationExist } from "../Middleware/MethodEOQValidations";
 import { MethodCMCController } from "../Controllers/MethodCMCController";
+import { MethodController } from "../Controllers/MethodController";
 
 const router = Router()
 
@@ -26,11 +27,32 @@ router.post('/:projectId/methods/eoq',
   MethodEOQController.createMethodEOQ
 )
 
-router.get('/:projectId/methods/eoq',
-  MethodEOQController.getAllMethodEOQ
+router.get('/:projectId/methods/:methodId',
+  MethodController.getMethodById
 );
 
+router.get('/:projectId/methods/:methodId/eoq/:eoqId',
+  param('eoqId').isMongoId().withMessage('ID no válido'),
+  handleInputErrors,
+  MethodEOQController.getMethodEOQById
+);
 
+router.put('/:projectId/methods/:methodId/eoq/:eoqId',
+  param('eoqId').isMongoId().withMessage('ID no válido'),
+  body('product').notEmpty().withMessage('Ingresa el nombre del producto'),
+  body('costoPedido').notEmpty().withMessage('El Costo de Pedido es obligatorio'),
+  body('costoMantenimiento').notEmpty().withMessage('El de Mantenimiento es obligatoria'),
+  body('demandaAnual').notEmpty().withMessage('La Demanda Anual es obligatoria'),
+  body('description').notEmpty().withMessage('La descripcion es necesaria'),
+  handleInputErrors,
+  MethodEOQController.updateMethodEOQ  
+)
+
+router.delete('/:projectId/methods/:methodId/eoq/:eoqId',
+  param('eoqId').isMongoId().withMessage('ID no válido'),
+  handleInputErrors,
+  MethodEOQController.deleteMethodEOQ 
+)
 
 // Rutas para el método CMC
 router.post('/:projectId/methods/cmc',
