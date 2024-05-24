@@ -17,15 +17,15 @@ router.post('/',
 router.get('/', ProjectController.findAllProjects
 )
 
-router.get('/:id',
-  param('id').isMongoId().withMessage('ID no válido'),
+router.get('/:projectId',
+  param('projectId').isMongoId().withMessage('ID no válido'),
   handleInputErrors,
   ProjectController.findProjectById
 )
 
 
-router.put('/:id',
-  param('id').isMongoId().withMessage('ID no válido'),
+router.put('/:projectId',
+  param('projectId').isMongoId().withMessage('ID no válido'),
   body('projectName').notEmpty().withMessage('El nombre del proyecto es obligatorio'),
   body('clientName').notEmpty().withMessage('El nombre del cliente es obligatorio'),
   body('description').notEmpty().withMessage('La descripción del método es obligatorio'),
@@ -33,5 +33,10 @@ router.put('/:id',
   ProjectController.updateProject
 )
 
+router.delete('/:projectId',
+  param('projectId').isMongoId().withMessage('ID no válido'),
+  handleInputErrors,
+  ProjectController.deleteProject
+)
 
 export default router

@@ -27,7 +27,3 @@ app.use('/api/auth', authRoutes)
 
 
 export default app
-
-
-// import metodoRoutes from './Routes/MethodRoutes'
-// import metodoCMCRoutes from './Routes/MethodCMCRoutes'

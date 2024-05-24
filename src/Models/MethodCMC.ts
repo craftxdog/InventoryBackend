@@ -1,7 +1,7 @@
 import mongoose, { Document, Schema, Types } from 'mongoose';
 
 const methodType = {
-  NTC: "",
+  NULL: "",
   EOQ: "EOQ",
   CMC: "CMC",
   RI: "RI"
@@ -13,9 +13,7 @@ export type MethodType = typeof methodType[keyof typeof methodType]
 
 export interface IMethodCMC extends Document {
   methodName: string
-  product: string
   methodType: MethodType
-  description: string
   horas: number
   MTBF: number
   duracionTarea: number
@@ -31,15 +29,10 @@ export interface IMethodCMC extends Document {
 }
 
 const methodSchema: Schema = new Schema ({
-
   methodName: {
     type: String,
     default: 'Costo de Mantenimiento Correctivo',
     required: true,
-  },
-  product: {
-    type: String,
-    required: true
   },
   methodType: {
     type: String,
@@ -89,10 +82,6 @@ const methodSchema: Schema = new Schema ({
   costoTotal: {
     type: Number,
     required: true,
-  },
-  description: {
-    type: String,
-    required: true
   },
   method: {
     type: Types.ObjectId,

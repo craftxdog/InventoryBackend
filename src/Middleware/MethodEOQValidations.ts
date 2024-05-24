@@ -30,7 +30,7 @@ export async function MethodEOQValidationExist(req: Request, res: Response, next
 
 export async function EOQMethodBelongToMethods(req: Request, res: Response, next: NextFunction) {
   try {
-    if (req.methodEOQ.method.toString() !== req.methods.id.toString()) {
+    if (req.methodEOQ.methods.toString() !== req.methods.id.toString()) {
       const error = Error('Invalid action')
       return res.status(404).json({ error: error.message })
     }

@@ -26,7 +26,7 @@ export class ProjectController {
         const error = new Error('Proyecto no encontrado')
         return res.status(404).json({ error: error.message })
       }
-      res.json(project);
+      res.status(201).json(project)
     } catch (error) {
       console.error(colors.dim.bold(`Error al buscar proyectos:, ${error}`))
       res.status(500).json({ error: "Error interno del servidor" })
@@ -35,17 +35,17 @@ export class ProjectController {
 
   static findProjectById = async (req: Request, res: Response) => {
     try {
-      const { id } = req.params
 
-      const project: IProjects | null = await Project.findById(id).populate('methods')
+      const { projectId } = req.params
+      const project = await Project.findById(projectId).populate('methods')
+
 
       if (!project) {
         const error = new Error('Proyecto no encontrado')
         return res.status(404).json({ error: error.message })
       }
 
-      res.json(project)
-
+      res.status(201).json(project)
     } catch (error) {
       console.error(colors.dim.bold(`Error al buscar proyectos:, ${error}`))
       res.status(500).json({ error: "Error interno del servidor" })
@@ -54,8 +54,8 @@ export class ProjectController {
 
   static updateProject = async (req: Request, res: Response) => {
     try {
-      const { id } = req.params
-      const project = await Project.findById(id)
+      const { projectId } = req.params
+      const project = await Project.findById(projectId)
 
       if (!project) {
         const error = new Error('Proyecto no encontrado')
@@ -76,14 +76,12 @@ export class ProjectController {
 
   static deleteProject = async (req: Request, res: Response) => {
     try {
-      const { id } = req.params;
-      const project = await Project.findById(id);
-
+      const { projectId } = req.params;
+      const project = await Project.findById(projectId);
       if (!project) {
         const error = new Error('Proyecto no encontrado')
         return res.status(404).json({ error: error.message })
       }
-
       await project.deleteOne()
       res.status(201).send("Proyecto Eliminado Correctamente")
     } catch (error) {

@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose"
 
 const methodType = {
-  NTC: "",
+  NULL: "",
   EOQ: "EOQ",
   CMC: "CMC",
   RI: "RI"
@@ -12,14 +12,12 @@ export type MethodType = typeof methodType[keyof typeof methodType]
 
 export interface IMethodEOQ extends Document {
   methodName: string
-  product: string
   methodType: MethodType
-  description: string
   costoPedido: number,
   costoMantenimiento: number,
   demandaAnual: number
   result: number
-  method: Schema.Types.ObjectId
+  methods: Schema.Types.ObjectId
 }
 
 const methodSchema: Schema = new Schema ({
@@ -27,10 +25,6 @@ const methodSchema: Schema = new Schema ({
     type: String,
     default: 'Cantidad Económica de Pedido',
     required: true,
-  },
-  product: {
-    type: String,
-    required: true
   },
   methodType: {
     type: String,
@@ -53,13 +47,9 @@ const methodSchema: Schema = new Schema ({
     type: Number,
     default: 0
   },
-  description: {
-    type: String,
-    required: true
-  },
-  method: {
+  methods: {
     type: Schema.Types.ObjectId,
-    ref: 'Method'
+    ref: 'Methods'
   }
 }, { timestamps: true } )
 
