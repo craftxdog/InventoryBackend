@@ -1,43 +1,43 @@
 import type { Request, Response, NextFunction } from "express";
-import Method, { IMethods } from "../Models/Methods";
+import MethodCMC, { IMethodCMC } from "../Models/MethodCMC";
 import colors from "colors";
 
 declare global {
   namespace Express {
     interface Request {
-      methods: IMethods;
+      methodCMC: IMethodCMC;
     }
   }
 }
 
-export async function MethodValidationExist(
+export async function MethodCMCValidationExist(
   req: Request,
   res: Response,
   next: NextFunction,
 ) {
   try {
-    const { methodId } = req.params;
-    const method: IMethods | null = await Method.findById(methodId);
+    const { cmcId } = req.params;
+    const method: IMethodCMC | null = await MethodCMC.findById(cmcId);
 
     if (!method) {
-      const error = new Error("Main Method not found");
+      const error = new Error("Method CMC not found");
       return res.status(404).json({ error: error.message });
     }
 
-    req.methods = method;
+    req.methodCMC = method;
     next();
   } catch (error) {
     console.log(colors.cyan.bold(error.message));
   }
 }
 
-export async function MethodBelongToProject(
+export async function CMCMethodBelongToMethods(
   req: Request,
   res: Response,
   next: NextFunction,
 ) {
   try {
-    if (req.methods.project.toString() !== req.project.id.toString()) {
+    if (req.methodCMC.methods.toString() !== req.methods.id.toString()) {
       const error = Error("Invalid action");
       return res.status(404).json({ error: error.message });
     }
