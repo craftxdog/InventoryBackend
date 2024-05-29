@@ -30,9 +30,9 @@ export class MethodCMCController {
           retrasoLogistico +
           (duracionTarea * costoUnitarioParada + costosFallaVezUnica));
 
-      const roundedCostoTotal = Number(costoTotal.toFixed(2));
+      const roundedCostoTotal = Number(costoTotal);
 
-      const methodCmCData: Partial<IMethodCMC> = {
+      const methodCmCData = {
         methodName: "Costo de Mantenimiento Correctivo",
         methodType: "CMC",
         horas,
@@ -47,10 +47,13 @@ export class MethodCMCController {
         numeroFallas: roundedNumeroFallas,
         costoTotal: roundedCostoTotal,
       };
+
       const methodCmC = new MethodCMC(methodCmCData);
       methodCmC.methods = req.methods._id;
+
       req.methods.methodCMC.push(methodCmC._id);
       await Promise.allSettled([methodCmC.save(), req.methods.save()]);
+
       res.status(201).send("Método Cáculado");
     } catch (error) {
       console.error(colors.dim.bold(`Error al Cácular, ${error}`));
