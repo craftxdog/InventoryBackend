@@ -1,13 +1,5 @@
 import mongoose, { Document, Schema, Types } from "mongoose";
-
-const methodType = {
-  NULL: "",
-  EOQ: "EOQ",
-  CMC: "CMC",
-  RI: "RI",
-} as const;
-
-export type MethodType = (typeof methodType)[keyof typeof methodType];
+import { MethodType, methodType } from "../Utils/methodType";
 
 export interface IMethodCMC extends Document {
   methodName: string;

@@ -17,6 +17,11 @@ import {
   CMCMethodBelongToMethods,
   MethodCMCValidationExist,
 } from "../Middleware/MethodCMCValidations";
+import {
+  CRPMethodBelongToMethods,
+  MethodCRPValidationExist,
+} from "../Middleware/MethodCRPValidations";
+import { MethodCRPController } from "../Controllers/MethodCRPController";
 
 const router = Router();
 
@@ -27,6 +32,8 @@ router.param("eoqId", MethodEOQValidationExist);
 router.param("eoqId", EOQMethodBelongToMethods);
 router.param("cmcId", MethodCMCValidationExist);
 router.param("cmcId", CMCMethodBelongToMethods);
+router.param("crpId", MethodCRPValidationExist);
+router.param("crpId", CRPMethodBelongToMethods);
 
 /*
  * Inicio con las rutas principales de Methods.
@@ -204,6 +211,40 @@ router.delete(
   param("cmcId").isMongoId().withMessage("ID no válido"),
   handleInputErrors,
   MethodCMCController.deleteMethodCMCById,
+);
+/*
+ * Terminamos con las rutas del Método CMC.
+ * Ahora continuaremos con las rutas para el Método CRP.
+ */
+
+router.post(
+  "/:projectId/methods/:methodId/crp",
+  param("methodId").isMongoId().withMessage("ID No Valido"),
+  body("tasaDemanda")
+    .notEmpty()
+    .withMessage("La tasa de demanda es obligatorio"),
+  body("tiempoVuelta")
+    .notEmpty()
+    .withMessage("El tiempo de vueltas es obligatoria"),
+  body("tamanoRecipiente")
+    .notEmpty()
+    .withMessage("El tamaño del recipiente es obligatoria"),
+  handleInputErrors,
+  MethodCRPController.createMethodCRP,
+);
+
+router.get(
+  "/:projectId/methods/:methodId/crp",
+  param("methodId").isMongoId().withMessage("ID no válido"),
+  handleInputErrors,
+  MethodCRPController.getAllMethodsCRP,
+);
+
+router.get(
+  "/:projectId/methods/:methodId/crp/:crpId",
+  param("crpId").isMongoId().withMessage("ID no válido"),
+  handleInputErrors,
+  MethodCRPController.getMethodCRPById,
 );
 
 export default router;

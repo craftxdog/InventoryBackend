@@ -16,6 +16,7 @@ export class MethodCMCController {
         costoUnitarioParada,
         costosFallaVezUnica,
       } = req.body;
+      const methodCmC: IMethodCMC = new MethodCMC(req.body);
 
       let mtbfValorAbsoluto = MTBF < 1 ? MTBF * horas : MTBF;
 
@@ -30,25 +31,11 @@ export class MethodCMCController {
           retrasoLogistico +
           (duracionTarea * costoUnitarioParada + costosFallaVezUnica));
 
-      const roundedCostoTotal = Number(costoTotal);
+      const roundedCostoTotal = costoTotal;
 
-      const methodCmCData = {
-        methodName: "Costo de Mantenimiento Correctivo",
-        methodType: "CMC",
-        horas,
-        MTBF: mtbfValorAbsoluto,
-        duracionTarea,
-        costoHoraTrabajo,
-        repuestos,
-        costoTareasOperacionales,
-        retrasoLogistico,
-        costoUnitarioParada,
-        costosFallaVezUnica,
-        numeroFallas: roundedNumeroFallas,
-        costoTotal: roundedCostoTotal,
-      };
-
-      const methodCmC = new MethodCMC(methodCmCData);
+      methodCmC.MTBF = mtbfValorAbsoluto;
+      methodCmC.numeroFallas = roundedNumeroFallas;
+      methodCmC.costoTotal = roundedCostoTotal;
       methodCmC.methods = req.methods._id;
 
       req.methods.methodCMC.push(methodCmC._id);
@@ -66,7 +53,6 @@ export class MethodCMCController {
       const methodCMC = await MethodCMC.find({
         methods: req.methods.id,
       }).populate("methods");
-      console.log(req.methods.id);
       res.status(201).json(methodCMC);
     } catch (error) {
       console.error(colors.dim.bold(`Error los Métodos CMC, ${error}`));

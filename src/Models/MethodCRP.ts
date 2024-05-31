@@ -1,13 +1,14 @@
 import mongoose, { Schema, Document } from "mongoose";
 import { MethodType, methodType } from "../Utils/methodType";
 
-export interface IMethodEOQ extends Document {
+export interface IMethodCRP extends Document {
   methodName: string;
   methodType: MethodType;
-  costoPedido: number;
-  costoMantenimiento: number;
-  demandaAnual: number;
-  result: number;
+  tasaDemanda: number;
+  tiempoVuelta: number;
+  tamanoRecipiente: number;
+  cantidadRecipiente: number;
+  invenMax: number;
   methods: Schema.Types.ObjectId;
 }
 
@@ -15,27 +16,31 @@ const methodSchema: Schema = new Schema(
   {
     methodName: {
       type: String,
-      default: "Cantidad Económica de Pedido",
+      default: "Cantidad de Recipientes",
       required: true,
     },
     methodType: {
       type: String,
       enum: Object.values(methodType),
-      default: methodType.EOQ,
+      default: methodType.CRP,
     },
-    costoPedido: {
+    tasaDemanda: {
       type: Number,
       required: true,
     },
-    costoMantenimiento: {
+    tiempoVuelta: {
       type: Number,
       required: true,
     },
-    demandaAnual: {
+    tamanoRecipiente: {
       type: Number,
       required: true,
     },
-    result: {
+    cantidadRecipiente: {
+      type: Number,
+      default: 0,
+    },
+    invenMax: {
       type: Number,
       default: 0,
     },
@@ -47,5 +52,5 @@ const methodSchema: Schema = new Schema(
   { timestamps: true },
 );
 
-const MethodEOQ = mongoose.model<IMethodEOQ>("MethodEOQ", methodSchema);
-export default MethodEOQ;
+const MethodCRP = mongoose.model<IMethodCRP>("MethodCRP", methodSchema);
+export default MethodCRP;

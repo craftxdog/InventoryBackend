@@ -41,7 +41,9 @@ export class MethodsController {
 
       const methods = await Methods.findById(methodId)
         .populate("methodEOQ")
-        .populate("methodCMC");
+        .populate("methodCMC")
+        .populate("methodCRP")
+        .populate("methodRI");
 
       res.status(201).json(methods);
     } catch (error) {
