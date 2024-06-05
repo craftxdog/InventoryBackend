@@ -4,6 +4,13 @@ import { MethodType, methodType } from "../Utils/methodType";
 export interface IMethodRI extends Document {
   methodName: string;
   methodType: MethodType;
+  demandaAnual: number;
+  cantidadPedido: number;
+  inventarioSeguridad: number;
+  valorSemanas: number;
+  cicloRevision: number;
+  valorPromedio: number;
+  rotacionInventario: number;
   methods: Schema.Types.ObjectId;
 }
 
@@ -18,6 +25,36 @@ const methodSchema: Schema = new Schema(
       type: String,
       enum: Object.values(methodType),
       default: methodType.RI,
+    },
+    demandaAnual: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    cantidadPedido: {
+      type: Number,
+      default: 0,
+    },
+    inventarioSeguridad: {
+      type: Number,
+      default: 0,
+      required: true,
+    },
+    valorSemanas: {
+      type: Number,
+      default: 0,
+    },
+    cicloRevision: {
+      type: Number,
+      default: 0,
+    },
+    valorPromedio: {
+      type: Number,
+      default: 0,
+    },
+    rotacionInventario: {
+      type: Number,
+      default: 0,
     },
     methods: {
       type: Schema.Types.ObjectId,

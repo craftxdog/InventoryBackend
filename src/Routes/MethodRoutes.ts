@@ -22,6 +22,16 @@ import {
   MethodCRPValidationExist,
 } from "../Middleware/MethodCRPValidations";
 import { MethodCRPController } from "../Controllers/MethodCRPController";
+import {
+  LUCMethodBelongToMethods,
+  MethodLUCValidationExist,
+} from "../Middleware/MethodLUCValidations";
+import { MethodLUCController } from "../Controllers/MethodLUCController";
+import {
+  MethodRIValidationExist,
+  RIMethodBelongToMethods,
+} from "../Middleware/MethodRIValidations";
+import { MethodRIController } from "../Controllers/MethodRIController";
 
 const router = Router();
 
@@ -34,6 +44,10 @@ router.param("cmcId", MethodCMCValidationExist);
 router.param("cmcId", CMCMethodBelongToMethods);
 router.param("crpId", MethodCRPValidationExist);
 router.param("crpId", CRPMethodBelongToMethods);
+router.param("lucId", MethodLUCValidationExist);
+router.param("lucId", LUCMethodBelongToMethods);
+router.param("rioId", MethodRIValidationExist);
+router.param("rioId", RIMethodBelongToMethods);
 
 /*
  * Inicio con las rutas principales de Methods.
@@ -245,6 +259,91 @@ router.get(
   param("crpId").isMongoId().withMessage("ID no válido"),
   handleInputErrors,
   MethodCRPController.getMethodCRPById,
+);
+
+/*
+ * Terminamos con las rutas del MétodoCRP.
+ * Ahora continuaremos con las rutas para el Método RI.
+ */
+
+router.post(
+  "/:projectId/methods/:methodId/ri",
+  param("methodId").isMongoId().withMessage("ID no válido"),
+  body("demandaAnual").notEmpty().withMessage("Ingrese la Demanda Anual (D)"),
+  body("cantidadPedido")
+    .notEmpty()
+    .withMessage("Ingrese la Cantidad de Pedido (Q)"),
+  body("inventarioSeguridad")
+    .notEmpty()
+    .withMessage("Ingrese el Inventario de Seguridad (SS)"),
+  body("cicloRevision")
+    .notEmpty()
+    .withMessage("Ingrese el Ciclo de Revisión (T)"),
+  body("valorSemanas")
+    .notEmpty()
+    .withMessage("Ingrese la Cantidad de Semanas en el Año"),
+  handleInputErrors,
+  MethodRIController.createMethodRI,
+);
+
+router.get(
+  "/:projectId/methods/:methodId/ri",
+  param("methodId").isMongoId().withMessage("ID no válido"),
+  handleInputErrors,
+  MethodRIController.getAllMethodsRI,
+);
+
+router.get(
+  "/:projectId/methods/:methodId/ri/:rioId",
+  param("rioId").isMongoId().withMessage("ID no válido"),
+  handleInputErrors,
+  MethodRIController.getMethodRIOById,
+);
+
+router.put(
+  "/:projectId/methods/:methodId/ri/:rioId",
+  param("rioId").isMongoId().withMessage("ID no válido"),
+  body("demandaAnual").notEmpty().withMessage("Ingrese la Demanda Anual (D)"),
+  body("cantidadPedido")
+    .notEmpty()
+    .withMessage("Ingrese la Cantidad de Pedido (Q)"),
+  body("inventarioSeguridad")
+    .notEmpty()
+    .withMessage("Ingrese el Inventario de Seguridad (SS)"),
+  body("cicloRevision")
+    .notEmpty()
+    .withMessage("Ingrese el Ciclo de Revisión (T)"),
+  body("valorSemanas")
+    .notEmpty()
+    .withMessage("Ingrese la Cantidad de Semanas en el Año"),
+  handleInputErrors,
+  MethodRIController.updateMethodRIOById,
+);
+
+router.delete(
+  "/:projectId/methods/:methodId/ri/:rioId",
+  param("rioId").isMongoId().withMessage("ID no válido"),
+  handleInputErrors,
+  MethodRIController.deleteMethodRIOById,
+);
+
+/*
+ * Terminamos con las rutas del Método RIO.
+ * Ahora continuaremos con las rutas para el Método LUC.
+ */
+
+router.post(
+  "/:projectId/methods/:methodId/luc",
+  param("methodId").isMongoId().withMessage("ID No Valido"),
+  body("semanas").notEmpty().withMessage("Las Semanas son obligatorias"),
+  body("requerimientoBruto")
+    .notEmpty()
+    .withMessage("El Reuqerimiento Bruto es obligatorio"),
+  body("LT").notEmpty().withMessage("El Requerimiento Bruto es obligatorio"),
+  body("K").notEmpty().withMessage("El Costos de Mantenimiento es obligatorio"),
+  body("S").notEmpty().withMessage("El Costo de Ordenar es obligatorio"),
+  handleInputErrors,
+  MethodLUCController.createMethodLUC,
 );
 
 export default router;

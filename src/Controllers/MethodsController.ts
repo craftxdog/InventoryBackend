@@ -42,10 +42,9 @@ export class MethodsController {
       const methods = await Methods.findById(methodId)
         .populate("methodEOQ")
         .populate("methodCMC")
-        .populate("methodCRP");
-
-      //.populate("methodRI");
-
+        .populate("methodCRP")
+        .populate("methodRI")
+        .populate("methodLUC");
       res.status(201).json(methods);
     } catch (error) {
       console.error(colors.red.bold(`Error al Listar el Método, ${error}`));

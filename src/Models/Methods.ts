@@ -4,6 +4,7 @@ import { IMethodCMC } from "./MethodCMC";
 import { IMethodCRP } from "./MethodCRP";
 import { MethodType, methodType } from "../Utils/methodType";
 import { IMethodRI } from "./MethodRI";
+import { IMethodLUC } from "./MethodLUC";
 
 export interface IMethods extends Document {
   title: string;
@@ -15,6 +16,7 @@ export interface IMethods extends Document {
   methodCMC: PopulatedDoc<IMethodCMC & Document>[];
   methodCRP: PopulatedDoc<IMethodCRP & Document>[];
   methodRI: PopulatedDoc<IMethodRI & Document>[];
+  methodLUC: PopulatedDoc<IMethodLUC & Document>[];
 }
 
 const methodSchema: Schema = new Schema(
@@ -64,6 +66,12 @@ const methodSchema: Schema = new Schema(
       {
         type: Types.ObjectId,
         ref: "MethodRI",
+      },
+    ],
+    methodLUC: [
+      {
+        type: Types.ObjectId,
+        ref: "MethodLUC",
       },
     ],
   },

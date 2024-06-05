@@ -8,13 +8,17 @@ export class MethodCRPController {
       const methodCrP: IMethodCRP = new MethodCRP(req.body);
       const { tasaDemanda, tiempoVuelta, tamanoRecipiente } = req.body;
 
-      const n = (tasaDemanda * tiempoVuelta) / (60 * tamanoRecipiente);
-      const invMax = tamanoRecipiente * n;
+      const tasaDemandaNum = Number(tasaDemanda);
+      const tiempoVueltaNum = Number(tiempoVuelta);
+      const tamanoRecipienteNum = Number(tamanoRecipiente);
 
-      console.log(invMax);
+      const n = Math.round(
+        (tasaDemandaNum * tiempoVueltaNum) / (60 * tamanoRecipienteNum),
+      );
+      const invMax = Math.round(n * tamanoRecipienteNum);
 
-      methodCrP.cantidadRecipiente = Math.ceil(n);
-      methodCrP.invenMax = Math.ceil(invMax);
+      methodCrP.cantidadRecipiente = n;
+      methodCrP.invenMax = invMax;
 
       methodCrP.methods = req.methods.id;
       req.methods.methodCRP.push(methodCrP.id);
