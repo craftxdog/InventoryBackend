@@ -1,42 +1,58 @@
-import { Router } from 'express'
-import { body, param } from 'express-validator';
-import { handleInputErrors } from '../Middleware/Validations';
-import {  ProjectController } from '../Controllers/ProjectController';
-
+import { Router } from "express";
+import { body, param } from "express-validator";
+import { handleInputErrors } from "../Middleware/Validations";
+import { ProjectController } from "../Controllers/ProjectController";
+import { authenticate } from "../Middleware/auth";
 
 const router = Router();
 
-router.post('/', 
-  body('projectName').notEmpty().withMessage('El nombre del proyecto es obligatorio'),
-  body('clientName').notEmpty().withMessage('El nombre del cliente es obligatorio'),
-  body('description').notEmpty().withMessage('La descripción del método es obligatorio'),
+router.use(authenticate);
+
+router.post(
+  "/",
+  body("projectName")
+    .notEmpty()
+    .withMessage("El nombre del proyecto es obligatorio"),
+  body("clientName")
+    .notEmpty()
+    .withMessage("El nombre del cliente es obligatorio"),
+  body("description")
+    .notEmpty()
+    .withMessage("La descripción del método es obligatorio"),
   handleInputErrors,
-  ProjectController.createProject
-)
+  ProjectController.createProject,
+);
 
-router.get('/', ProjectController.findAllProjects
-)
+router.get("/", ProjectController.findAllProjects);
 
-router.get('/:projectId',
-  param('projectId').isMongoId().withMessage('ID no válido'),
+router.get(
+  "/:projectId",
+  param("projectId").isMongoId().withMessage("ID no válido"),
   handleInputErrors,
-  ProjectController.findProjectById
-)
+  ProjectController.findProjectById,
+);
 
-
-router.put('/:projectId',
-  param('projectId').isMongoId().withMessage('ID no válido'),
-  body('projectName').notEmpty().withMessage('El nombre del proyecto es obligatorio'),
-  body('clientName').notEmpty().withMessage('El nombre del cliente es obligatorio'),
-  body('description').notEmpty().withMessage('La descripción del método es obligatorio'),
+router.put(
+  "/:projectId",
+  param("projectId").isMongoId().withMessage("ID no válido"),
+  body("projectName")
+    .notEmpty()
+    .withMessage("El nombre del proyecto es obligatorio"),
+  body("clientName")
+    .notEmpty()
+    .withMessage("El nombre del cliente es obligatorio"),
+  body("description")
+    .notEmpty()
+    .withMessage("La descripción del método es obligatorio"),
   handleInputErrors,
-  ProjectController.updateProject
-)
+  ProjectController.updateProject,
+);
 
-router.delete('/:projectId',
-  param('projectId').isMongoId().withMessage('ID no válido'),
+router.delete(
+  "/:projectId",
+  param("projectId").isMongoId().withMessage("ID no válido"),
   handleInputErrors,
-  ProjectController.deleteProject
-)
+  ProjectController.deleteProject,
+);
 
-export default router
+export default router;

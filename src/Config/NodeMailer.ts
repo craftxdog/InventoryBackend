@@ -1,17 +1,18 @@
-import nodemailer from 'nodemailer'
-import dotenv from 'dotenv'
+import nodemailer from "nodemailer";
+import dotenv from "dotenv";
 
-dotenv.config({})
+dotenv.config({});
 
 const config = () => {
   return {
-    host: process.env.STMP_HOST,
-    port: +process.env.STMP_PORT,
+    host: process.env.SMTP_HOST, // Corregido a SMTP_HOST
+    port: parseInt(process.env.SMTP_PORT, 10),
+    secure: process.env.SMTP_PORT === "465",
     auth: {
-      user: process.env.STMP_USER,
-      pass: process.env.STMP_PASSWORD
-    }
-  }
-}
+      user: process.env.SMTP_USER, // Corregido a SMTP_USER
+      pass: process.env.SMTP_PASSWORD,
+    },
+  };
+};
 
 export const transporter = nodemailer.createTransport(config());
