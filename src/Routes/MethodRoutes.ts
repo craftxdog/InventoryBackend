@@ -339,11 +339,22 @@ router.post(
   body("requerimientoBruto")
     .notEmpty()
     .withMessage("El Reuqerimiento Bruto es obligatorio"),
-  body("LT").notEmpty().withMessage("El Requerimiento Bruto es obligatorio"),
   body("K").notEmpty().withMessage("El Costos de Mantenimiento es obligatorio"),
   body("S").notEmpty().withMessage("El Costo de Ordenar es obligatorio"),
   handleInputErrors,
   MethodLUCController.createMethodLUC,
+);
+router.get(
+  "/:projectId/methods/:methodId/luc",
+  param("methodId").isMongoId().withMessage("ID no válido"),
+  handleInputErrors,
+  MethodLUCController.getAllMethodsLUC,
+);
+router.get(
+  "/:projectId/methods/:methodId/luc/:lucId",
+  param("lucId").isMongoId().withMessage("ID no válido"),
+  handleInputErrors,
+  MethodLUCController.getMethodLUCById,
 );
 
 export default router;

@@ -16,6 +16,7 @@ export class MethodCMCController {
         costoUnitarioParada,
         costosFallaVezUnica,
       } = req.body;
+
       const methodCmC: IMethodCMC = new MethodCMC(req.body);
 
       let mtbfValorAbsoluto = MTBF < 1 ? MTBF * horas : MTBF;

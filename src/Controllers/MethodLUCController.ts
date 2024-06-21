@@ -4,11 +4,12 @@ import MethodLUC from "../Models/MethodLUC";
 
 export class MethodLUCController {
   static createMethodLUC = async (req: Request, res: Response) => {
-    const S = 6.5;
-    const K = 0.03;
     try {
-      const { semanas, requerimientos } = req.body;
+      const { semanas, requerimientoBruto, S, K } = req.body;
+
+      const requerimientos = requerimientoBruto;
       // Validar que se proporcionaron las semanas y los requerimientos
+
       if (
         !semanas ||
         !Array.isArray(semanas) ||
@@ -18,6 +19,7 @@ export class MethodLUCController {
           .status(400)
           .json({ error: "Datos de semanas incorrectos o incompletos" });
       }
+
       if (
         !requerimientos ||
         !Array.isArray(requerimientos) ||
@@ -28,9 +30,16 @@ export class MethodLUCController {
           .json({ error: "Datos de requerimientos incorrectos o incompletos" });
       }
       // Calcular LUC
+      // Arrays para almacenar resultados
+      const unidades: number[] = [];
+      const kValues: number[] = [];
       const costosTotales: number[] = [];
-      let costoTotalAnterior = 0;
+      const costosUnitariosTotales: number[] = [];
+      const peridos: number[] = [];
+
+      // let costoTotalAnterior = 0;
       let unidadesTotales = 0;
+      let sum = 0;
 
       for (let i = 0; i < requerimientos.length; i++) {
         // Validar que el requerimiento sea un número válido
@@ -41,34 +50,56 @@ export class MethodLUCController {
             .json({ error: "Requerimiento bruto inválido" });
         }
 
+        // Calcular unidades acumuladas
+        unidadesTotales += requerimiento;
+        unidades.push(unidadesTotales);
+
+        sum += 1;
+        peridos.push(sum);
+
         // Calcular K
         const k = i > 0 ? requerimiento * i * K : 0;
+        kValues.push(k);
 
         // Calcular costo total
-        const costoTotal = costoTotalAnterior + k;
-
-        // Actualizar costo total anterior
-        costoTotalAnterior = costoTotal;
-
-        // Calcular unidades totales
-        unidadesTotales += requerimiento;
-
-        // Guardar costo total en array
+        const costoTotal = i === 0 ? S : costosTotales[i - 1] + k;
         costosTotales.push(costoTotal);
+
+        // Calcular costo unitario total
+        const costoUnitarioTotal = costoTotal / unidadesTotales;
+        costosUnitariosTotales.push(costoUnitarioTotal);
       }
 
-      // Calcular costo unitario total por unidades
-      const costoUnitarioTotal = costoTotalAnterior / unidadesTotales;
+      const methodLuC = new MethodLUC({
+        semanas: semanas,
+        unidades: unidades,
+        periodo: peridos,
+        S: S,
+        K: K,
+        kvalores: kValues,
+        costoTotal: costosTotales,
+        costoUnitarioTotal: costosUnitariosTotales,
+      });
+      methodLuC.requerimientoBruto = req.body.requerimientoBruto;
+      methodLuC.methods = req.methods.id;
+      req.methods.methodLUC.push(methodLuC.id);
+
+      await Promise.allSettled([methodLuC.save(), req.methods.save()]);
 
       // Preparar respuesta
+      /*
       const resultado = {
+        periodos: semanas,
+        unidades,
+        S,
+        kValues,
         costosTotales,
-        costoUnitarioTotal,
+        costosUnitariosTotales,
       };
+      */
 
       // Enviar respuesta al cliente
-      res.json(resultado);
-      //res.status(201).send("Método LUC Cáculado.");
+      res.status(201).send("Método Cálculado Correctamente");
     } catch (error) {
       console.error(colors.dim.bold(`Error al Cácular, ${error}`));
       res.status(500).json({ error: "Error interno del servidor" });

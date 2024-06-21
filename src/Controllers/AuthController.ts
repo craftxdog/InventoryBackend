@@ -41,7 +41,6 @@ export class AuthController {
   static confirmAccount = async (req: Request, res: Response) => {
     try {
       const { token } = req.body;
-      console.log(token);
       const tokenExist = await Token.findOne({ token });
 
       if (!tokenExist) {
