@@ -7,19 +7,15 @@ export class MethodLUCController {
     try {
       const { semanas, requerimientoBruto, S, K } = req.body;
 
-      const requerimientos = requerimientoBruto;
-      // Validar que se proporcionaron las semanas y los requerimientos
+      const semanasNum = Number(semanas);
 
-      if (
-        !semanas ||
-        !Array.isArray(semanas) ||
-        semanas.length !== requerimientos.length
-      ) {
+      const requerimientos = requerimientoBruto;
+
+      if (!semanasNum || typeof semanasNum !== "number" || semanasNum <= 0) {
         return res
           .status(400)
-          .json({ error: "Datos de semanas incorrectos o incompletos" });
+          .json({ error: "El número de semanas debe ser un número positivo" });
       }
-
       if (
         !requerimientos ||
         !Array.isArray(requerimientos) ||
@@ -41,9 +37,9 @@ export class MethodLUCController {
       let unidadesTotales = 0;
       let sum = 0;
 
-      for (let i = 0; i < requerimientos.length; i++) {
+      for (let i = 0; i < semanasNum; i++) {
         // Validar que el requerimiento sea un número válido
-        const requerimiento = Number(requerimientos[i]);
+        const requerimiento = Number(requerimientos[i]) || 0;
         if (isNaN(requerimiento) || requerimiento < 0) {
           return res
             .status(400)
@@ -71,7 +67,7 @@ export class MethodLUCController {
       }
 
       const methodLuC = new MethodLUC({
-        semanas: semanas,
+        semanas,
         unidades: unidades,
         periodo: peridos,
         S: S,

@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 import { MethodType, methodType } from "../Utils/methodType";
 
-export interface IMethodLUC extends Document {
+export interface IMethodLTC extends Document {
   methodName: string;
   methodType: MethodType;
   semanas: number;
@@ -47,5 +47,5 @@ const methodSchema: Schema = new Schema(
   { timestamps: true },
 );
 
-const MethodLUC = mongoose.model<IMethodLUC>("MethodLUC", methodSchema);
-export default MethodLUC;
+const MethodLTC = mongoose.model<IMethodLTC>("MethodLTC", methodSchema);
+export default MethodLTC;
